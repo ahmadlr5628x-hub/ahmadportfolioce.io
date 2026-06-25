@@ -1,11 +1,134 @@
-<article class="project-card">
-    <div class="project-header">
-        <h3>Your Project Title</h3>
-        <span class="tag">Technology</span>
-    </div>
-    <p>Project description</p>
-    <div class="tech-stack">
-        <span>Tech1</span>
-        <span>Tech2</span>
-    </div>
-</article>
+<script>
+  // ── POSTS DATA ──
+  const posts = [
+    {
+      tag: "Portfolio",
+      date: "Sep 2024",
+      title: "Why I Started My GitHub Portfolio Website",
+      excerpt: "How a piece of advice from my Database Systems instructor turned into this entire site — and why a digital footprint matters more than I first realized.",
+      readTime: "3 min read",
+      content: [
+        "My name is Ahmad Talib, and I'm a Computer Engineering student. This blog itself is part of an idea that started in one of my very first classes.",
+        "During Database Systems and Programming Fundamentals, our instructor kept pushing us to think beyond just passing exams. He encouraged every student to build a professional portfolio early on — somewhere that could hold our projects, our blogs, our achievements, and most importantly, the proof that we were actually growing as engineers.",
+        "At first I treated it like just another assignment, but the more I thought about it, the more it made sense. A portfolio is basically a digital footprint — something an employer, a university admissions committee, or even a fellow student could look at and immediately understand what I've built and learned.",
+        "So that's exactly why this site exists. Over the next several posts, I'm going to use it to document my actual semester experiences — the projects, the late nights, the grades, and everything in between."
+      ]
+    },
+    {
+      tag: "Journey",
+      date: "Sep 2024",
+      title: "My Admission Journey and Choosing Computer Engineering",
+      excerpt: "Getting into campus, picking Computer Engineering over everything else, and the nervous excitement of week one.",
+      readTime: "3 min read",
+      content: [
+        "I still remember the day I got my admission letter. After months of preparation and uncertainty, seeing my name confirmed for a seat felt like the first real 'win' of my engineering life.",
+        "A lot of people asked me why I picked Computer Engineering instead of something like Electrical or Software Engineering. Honestly, it came down to the mix — I wanted the hardware side, the logic design, the circuits, but I also wanted serious programming, databases, and software development. Computer Engineering sat exactly at that intersection.",
+        "Before classes even started, I knew it would be a challenge, but stepping into campus on day one made it all feel real. The transition from Intermediate to University is huge, but I am ready to make the most of it."
+      ]
+    }
+  ];
+
+  // ── TYPING EFFECT FOR HERO TERMINAL ──
+  const typedLine = document.getElementById('typedLine');
+  const textToType = "echo 'Let\'s build something cool.'";
+  let index = 0;
+
+  function typeEffect() {
+    if (index < textToType.length) {
+      typedLine.textContent += textToType.charAt(index);
+      index++;
+      setTimeout(typeEffect, 70);
+    }
+  }
+
+  // Start typing effect on load
+  window.addEventListener('DOMContentLoaded', typeEffect);
+
+  // ── RENDER BLOG GRID ──
+  function renderBlogGrid() {
+    const grid = document.getElementById('blogGrid');
+    grid.innerHTML = '';
+
+    posts.forEach((post, index) => {
+      const card = document.createElement('div');
+      card.className = 'post-card';
+      card.onclick = () => openPost(index);
+
+      card.innerHTML = `
+        <div class="post-meta">
+          <span class="post-tag">${post.tag}</span>
+          <span class="post-date">${post.date}</span>
+        </div>
+        <h3 class="post-title">${post.title}</h3>
+        <p class="post-excerpt">${post.excerpt}</p>
+        <div class="post-footer">
+          <span class="read-time">${post.readTime}</span>
+          <span class="read-btn">Read full post 
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // ── NAVIGATION SYSTEM ──
+  function navigate(sectionId, element) {
+    // Hide all sections
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    
+    // Show target section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) targetSection.classList.add('active');
+
+    // Update active nav state in desktop sidebar and mobile nav
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    
+    // Find matching links across menus and highlight them
+    const linkText = element.textContent.trim().replace('Posts', '').replace('Me', '').trim();
+    document.querySelectorAll('.nav-item').forEach(item => {
+      if (item.textContent.includes(linkText)) {
+        item.classList.add('active');
+      }
+    });
+
+    // Close mobile nav menu if open
+    document.getElementById('mobileNav').classList.remove('open');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── OPEN/CLOSE FULL POST ──
+  function openPost(index) {
+    const post = posts[index];
+    document.getElementById('postDetailTag').textContent = post.tag;
+    document.getElementById('postDetailDate').textContent = post.date;
+    document.getElementById('postDetailReadTime').textContent = post.readTime;
+    document.getElementById('postDetailTitle').textContent = post.title;
+
+    const bodyContainer = document.getElementById('postDetailBody');
+    bodyContainer.innerHTML = post.content.map(p => `<p>${p}</p>`).join('');
+
+    // Hide blog list section, show post detail section
+    document.getElementById('blog').classList.remove('active');
+    document.getElementById('post-detail').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function closePost() {
+    document.getElementById('post-detail').classList.remove('active');
+    document.getElementById('blog').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── MOBILE MENU TOGGLE ──
+  function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+
+  // Initialize the website contents
+  renderBlogGrid();
+</script>
+</body>
+</html>
